@@ -1,8 +1,7 @@
-const log = console.log.bind(console, '>>>')
 const axios = require('axios')
-const Sea = require('./bigsea.js')
-const SeaNodeJs = {
-  ...Sea.static,
+const static = require('./bigsea-static.js')
+module.exports = {
+  ...static,
   // Ajax
   Ajax(request) {
     // 直接 GET 请求
@@ -58,6 +57,3 @@ const SeaNodeJs = {
     return data
   },
 }
-// 默认 host 域名
-// Sea.Ajax.HOST = 'https://api.bigc.cc'
-module.exports = SeaNodeJs

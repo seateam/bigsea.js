@@ -1,25 +1,28 @@
 {
   "name": "bigsea",
-  "version": "0.0.3",
-  "description": "海雅库",
-  "main": "bigsea.js",
+  "version": "0.0.4",
+  "description": "bigsea.js",
+  "main": "index.js",
   "scripts": {
-    "test": "node bigsea.js"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BIGC-HUB/bigsea.js.git"
   },
   "keywords": [
+    "bigsea",
     "bigsea.js"
   ],
   "author": "bigsea",
-  "license": "MIT",
+  "license": "bigsea",
   "bugs": {
     "url": "https://github.com/BIGC-HUB/bigsea.js/issues"
   },
   "homepage": "https://github.com/BIGC-HUB/bigsea.js#readme",
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "bowser": "^2.9.0",
+    "lodash.merge": "^4.6.2"
   }
 }
