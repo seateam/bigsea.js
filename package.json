@@ -1,7 +1,7 @@
 {
   "name": "bigsea",
-  "version": "0.0.1",
-  "description": "大海",
+  "version": "0.0.3",
+  "description": "海雅库",
   "main": "bigsea.js",
   "scripts": {
     "test": "node bigsea.js"
