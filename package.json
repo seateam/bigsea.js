@@ -1,0 +1,25 @@
+{
+  "name": "bigsea",
+  "version": "0.0.1",
+  "description": "大海",
+  "main": "bigsea.js",
+  "scripts": {
+    "test": "node bigsea.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BIGC-HUB/bigsea.js.git"
+  },
+  "keywords": [
+    "bigsea.js"
+  ],
+  "author": "bigsea",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BIGC-HUB/bigsea.js/issues"
+  },
+  "homepage": "https://github.com/BIGC-HUB/bigsea.js#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
