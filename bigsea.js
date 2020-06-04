@@ -536,7 +536,7 @@
       // host
       if (!req.url.startsWith('http')) {
         // 默认域名
-        req.url = (this.Ajax.host || '') + req.url
+        req.url = (this.Ajax.HOST || '') + req.url
       }
       // url 解析
       const url = this.parseUrl(req.url)
@@ -739,7 +739,7 @@
     Sea[key] = Sea.static[key]
   }
   // 默认 host 域名
-  Sea.Ajax.HOST = 'https://api.bigc.cc'
+  // Sea.Ajax.HOST = 'https://api.bigc.cc'
   // 默认参数
   Sea.Ajax.default = function () {
     const data = {}
