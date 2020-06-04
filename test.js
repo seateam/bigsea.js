@@ -1,5 +1,2 @@
-const bigsea = require('./index.js')
-// const SeaNode = bigsea('node')
-// console.log('SeaNode', SeaNode)
-const Sea = bigsea()
+const Sea = require('./bigsea.js')
 console.log('Sea', Sea)

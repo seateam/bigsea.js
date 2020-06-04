@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "bigsea",
     "bigsea.js"
   ],
-  "author": "bigsea",
-  "license": "bigsea",
+  "author": "bigsea.cc",
+  "license": "bigsea.cc",
   "bugs": {
     "url": "https://github.com/BIGC-HUB/bigsea.js/issues"
   },
