@@ -2,7 +2,7 @@
   "name": "bigsea",
   "version": "0.0.4",
   "description": "bigsea.js",
-  "main": "index.js",
+  "main": "bigsea.js",
   "scripts": {
     "test": "node test.js"
   },

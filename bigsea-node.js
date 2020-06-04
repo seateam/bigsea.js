@@ -1,7 +1,8 @@
+const log = console.log.bind(console, '>>>')
 const axios = require('axios')
-const static = require('./bigsea-static.js')
-module.exports = {
-  ...static,
+const Sea = require('./bigsea.js')
+const SeaNode = {
+  ...Sea.static,
   // Ajax
   Ajax(request) {
     // 直接 GET 请求
@@ -20,7 +21,7 @@ module.exports = {
       dataType: (request.dataType || 'json').toLowerCase(),
     }
     // url 解析
-    const url = Sea.parseUrl(req.url)
+    const url = this.parseUrl(req.url)
     req.url = url.path
     // host
     if (!req.url.startsWith('http')) {
@@ -32,7 +33,7 @@ module.exports = {
     if (req.method === 'GET') {
       query = Object.assign(query, req.data)
     }
-    req.url += Sea.query(query)
+    req.url += this.query(query)
     // hash 锚点
     const hash = req.hash || url.hash
     if (hash) {
@@ -50,10 +51,7 @@ module.exports = {
     }
     return axios(options)
   },
-  toJSON(data) {
-    if (typeof data !== 'string') {
-      data = JSON.stringify(data)
-    }
-    return data
-  },
 }
+// 默认 host 域名
+Sea.Ajax.HOST = 'https://api.bigc.cc'
+module.exports = SeaNode
