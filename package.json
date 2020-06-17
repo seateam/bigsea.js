@@ -1,10 +1,13 @@
 {
   "name": "bigsea",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "login": "npm login",
+    "publish": "npm publish",
+    "npm-install": "npm install"
   },
   "repository": {
     "type": "git",

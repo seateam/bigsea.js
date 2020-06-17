@@ -3,6 +3,7 @@
 源码 https://github.com/BIGC-HUB/bigsea.js/blob/master/bigsea.js
 
 示例
+
 ```js
 Sea('body').addClass('done')
 
@@ -79,9 +80,11 @@ Sea.static = {
     return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase()
   },
   // url 解析
-  parseUrl(url) {
+  url(url) {
     let obj = {}
     let arr = []
+    // url
+    obj.url = url
     // protocol
     arr = url.split('://')
     obj.protocol = arr[1] ? arr[0] : ''
@@ -103,7 +106,7 @@ Sea.static = {
     // path
     obj.path = '/' + url
     // origin
-    obj.origin = ''
+    obj.origin = obj.host
     if (obj.protocol && obj.host) {
       obj.origin = obj.protocol + '://' + obj.host
     }
@@ -155,7 +158,7 @@ Sea.static = {
       req.url = (this.Ajax.HOST || '') + req.url
     }
     // url 解析
-    const url = this.parseUrl(req.url)
+    const url = this.url(req.url)
     req.url = url.path
     // query 请求
     let query = Object.assign(url.query, req.query)
