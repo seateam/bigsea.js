@@ -102,8 +102,9 @@
       return this
     }
     // 触发自定义事件
-    iEvent(name, obj, bubble) {
+    emit(name, obj, bubble) {
       let e = new Event(name, {
+        // 事件冒泡
         bubbles: bubble || true,
       })
       e.data = obj || {}
@@ -113,6 +114,9 @@
     }
     // 样式
     css(obj, val) {
+      // Sea('body').css('color') // 获取
+      // Sea('body').css('color', 'red') // 设置单个
+      // Sea('body').css({ color: 'red' }) // 设置多个
       let set = (k, v) => {
         for (let e of this.arr) {
           e.style[k] = String(v)
@@ -430,7 +434,7 @@
     cut(n) {
       if (this.cut.count) {
         this.cut.count--
-        if (this.cut.count == 1) {
+        if (this.cut.count === 1) {
           delete this.cut.count
           throw `断点：${n}次`
         }
@@ -609,12 +613,7 @@
     // 文档 https://developer.qiniu.com/kodo/sdk/1283/javascript
     upload(qiniu, file, token, callback) {
       // 关于 key 要怎么处理自行解决，但如果为 undefined 或者 null 会使用上传后的 hash 作为 key.
-      let key = file.key
-      if (!key) {
-        const suffix = file.name.split('.')[1] || ''
-        key = `temp/${Date.now()}.${suffix}`
-      }
-
+      const key = file.key
       // 因人而异，自行解决
       const putExtra = {}
       const config = {}
@@ -632,19 +631,22 @@
         callback('complete', res)
       }
       const uploadTask = observable.subscribe(next, error, complete)
-      // uploadTask.unsubscribe()
-      // 返回以方便取消上传操作
       return uploadTask
+      // 取消上传
+      // uploadTask.unsubscribe()
     },
     // 生成样式 String
     css(css, obj) {
       // this.css('top:hover', {'display':'block', 'cursor':'zoom-in'})
+      if (typeof css === 'object') {
+        obj = css
+      }
       let s = ''
       for (let key in obj) {
         let val = obj[key]
         s += `${key}:${val};`
       }
-      if (css) {
+      if (typeof css === 'string') {
         s = `${css}{${s}}`
       }
       return s

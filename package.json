@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "url": "git+https://github.com/BIGC-HUB/bigsea.js.git"
   },
   "keywords": [
+    "bigsea",
     "bigsea.cc",
     "bigsea.js"
   ],
@@ -24,7 +25,6 @@
   },
   "homepage": "https://github.com/BIGC-HUB/bigsea.js#readme",
   "dependencies": {
-    "axios": "^0.19.2",
     "bowser": "^2.9.0",
     "lodash.merge": "^4.6.2"
   }
