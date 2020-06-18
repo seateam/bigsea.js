@@ -2,9 +2,38 @@
 
 源码 https://github.com/BIGC-HUB/bigsea.js/blob/master/bigsea.js
 
+直接在浏览器 中使用
+```html
+<script src="https://bigsea.cc/cdn/bigsea.js"></script>
+```
+
+安装
+
+```
+npm install bigsea --save
+``` 
+
+Vue 中使用
+
+```js
+// 推荐在 main.js 中引用，可以直接生成全局对象 window.Sea
+import 'bigsea'
+或
+import Sea from 'bigsea'
+```
+
+Node.Js 中使用
+
+```js
+const Sea = require('bigsea')
+```
+
+
 示例
 
-DOM 操作同 jQuery
+## DOM 操作
+
+接口设计同 jQuery
 
 #### 事件监听
 
@@ -55,4 +84,8 @@ Sea('body').ob(
 )
 ```
 
-联系作者 c@bigc.cc
+联系作者
+
+大海 c@bigc.cc
+
+Janck 576492658@qq.com
