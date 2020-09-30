@@ -1,10 +1,10 @@
 # bigsea.js
 
-源码 https://github.com/BIGC-HUB/bigsea.js/blob/master/bigsea.js
+项目地址 https://github.com/BIGC-HUB/bigsea.js
 
 直接在浏览器 中使用
 ```html
-<script src="https://bigsea.cc/cdn/bigsea.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bigsea@latest/bigsea.js"></script>
 ```
 
 安装
@@ -86,8 +86,4 @@ Sea('body').ob(
 
 联系作者
 
-大海团队 mp@sea.team
-
-汪洋 iwangyang@qq.com
-
-Janck 576492658@qq.com
+大海团队 https://mp.sea.team
