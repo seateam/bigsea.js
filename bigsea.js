@@ -1,5 +1,5 @@
 // bigsea.js
-;(function (factory) {
+(function (factory) {
   // node环境
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory()
@@ -743,7 +743,7 @@
     Sea[key] = Sea.static[key]
   }
   // 默认 host 域名
-  // Sea.Ajax.HOST = 'https://api.bigc.cc'
+  // Sea.Ajax.HOST = 'https://api.sea.team'
   // 默认参数
   Sea.Ajax.default = function () {
     const data = {}

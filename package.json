@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "keywords": [
     "bigsea",
-    "bigsea.cc",
+    "sea.team",
     "bigsea.js"
   ],
   "author": "bigsea.cc",
