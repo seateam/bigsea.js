@@ -86,6 +86,8 @@ Sea('body').ob(
 
 联系作者
 
-大海 c@bigc.cc
+大海团队 mp@sea.team
+
+汪洋 iwangyang@qq.com
 
 Janck 576492658@qq.com
