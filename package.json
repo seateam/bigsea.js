@@ -1,11 +1,9 @@
 {
   "name": "bigsea",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
-    "login": "npm login",
-    "publish": "npm publish",
     "npm-install": "npm install"
   },
   "repository": {
