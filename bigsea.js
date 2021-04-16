@@ -1,5 +1,5 @@
 // bigsea.js
-(function (factory) {
+;(function (factory) {
   // node环境
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = factory()
@@ -402,11 +402,10 @@
   // https://juejin.im/entry/5ca45ad7e51d452c02246d26
   // 静态方法
   Sea.static = {
-    // 打开新网页
-    open(url, replace) {
+    openUrl(url) {
       // 默认 https
       if (url.startsWith('http')) {
-        // 不处理
+        // 不处理 https http
       } else if (url.startsWith('//')) {
         url = 'http:' + url
       } else if (url.startsWith('/')) {
@@ -414,10 +413,15 @@
       } else {
         url = 'https://' + url
       }
+      return url
+    },
+    // 打开新网页
+    open(url, replace) {
+      let s = this.openUrl(url)
       if (replace) {
-        window.location = url
+        window.location.href = s
       } else {
-        window.open(url)
+        window.open(s)
       }
     },
     // 浮点数运算
@@ -552,7 +556,7 @@
       if (req.method === 'GET') {
         query = Object.assign(query, req.data)
       }
-      req.url += this.query(query)
+      req.url += '?' + this.query(query)
       // hash 锚点
       const hash = req.hash || url.hash
       if (hash) {
@@ -669,7 +673,7 @@
         if (obj) {
           for (let e of obj.split('&')) {
             let arr = e.split('=')
-            result[arr[0]] = arr[1] || ''
+            result[arr[0]] = decodeURIComponent(arr[1]) || ''
           }
         }
         return result
@@ -681,7 +685,7 @@
         }
         let s = ''
         if (arr.length) {
-          s = '?' + arr.join('&')
+          s = arr.join('&')
         }
         return s
       }
@@ -709,6 +713,30 @@
         }
         return obj
       }
+      return undefined
+    },
+    // 数组去重
+    set(arr, path) {
+      const result = []
+      const dict = {}
+      for (const item of arr) {
+        if (typeof item === 'object') {
+          const key = this.get(item, path)
+          // 没找到不去重
+          if (key === null) {
+            result.push(item)
+          } else if (dict[key] !== true) {
+            dict[key] = true
+            result.push(item)
+          }
+        } else {
+          if (dict[item] !== true) {
+            dict[item] = true
+            result.push(item)
+          }
+        }
+      }
+      return result
     },
     // 本地存储
     localStorage(key, val) {
