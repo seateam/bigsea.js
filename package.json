@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BIGC-HUB/bigsea.js.git"
+    "url": "git+https://github.com/SeaTeam/bigsea.js.git"
   },
   "keywords": [
     "bigsea",
@@ -20,9 +20,9 @@
   "author": "sea.team",
   "license": "sea.team",
   "bugs": {
-    "url": "https://github.com/BIGC-HUB/bigsea.js/issues"
+    "url": "https://github.com/SeaTeam/bigsea.js/issues"
   },
-  "homepage": "https://github.com/BIGC-HUB/bigsea.js#readme",
+  "homepage": "https://github.com/SeaTeam/bigsea.js#readme",
   "dependencies": {
     "bowser": "^2.11.0",
     "lodash.merge": "^4.6.2"
