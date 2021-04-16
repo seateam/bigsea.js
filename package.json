@@ -18,14 +18,14 @@
     "sea.team",
     "bigsea.js"
   ],
-  "author": "bigsea.cc",
-  "license": "bigsea.cc",
+  "author": "sea.team",
+  "license": "sea.team",
   "bugs": {
     "url": "https://github.com/BIGC-HUB/bigsea.js/issues"
   },
   "homepage": "https://github.com/BIGC-HUB/bigsea.js#readme",
   "dependencies": {
-    "bowser": "^2.9.0",
+    "bowser": "^2.11.0",
     "lodash.merge": "^4.6.2"
   }
 }
