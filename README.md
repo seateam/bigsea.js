@@ -1,8 +1,7 @@
 # bigsea.js
 
-项目地址 https://github.com/BIGC-HUB/bigsea.js
-
 直接在浏览器 中使用
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/bigsea@latest/bigsea.js"></script>
 ```
@@ -11,7 +10,7 @@
 
 ```
 npm install bigsea --save
-``` 
+```
 
 Vue 中使用
 
@@ -27,7 +26,6 @@ Node.Js 中使用
 ```js
 const Sea = require('bigsea')
 ```
-
 
 示例
 
@@ -82,6 +80,30 @@ Sea('body').ob(
     log(event)
   },
 )
+```
+
+#### 静态方法
+
+```js
+Sea.open() // 打开新网页
+Sea.float() // 浮点数运算
+Sea.ensure() // 测试
+Sea.cut() // 循环 n 次后断点
+Sea.random() // 返回 a-b 的随机数
+Sea.re() // 正则 特殊字符转义
+Sea.json() // json 解析
+Sea.type() // 返回数据类型
+Sea.url() // url 解析
+Sea.Ajax() // Ajax
+Sea.css() // 生成样式 String
+Sea.query() // 生成 query
+Sea.has() // Object 检查
+Sea.get() // Object 获取
+Sea.set() // 数组去重
+Sea.localStorage() // 本地存储
+Sea.deepCopy() // 深拷贝
+Sea.merge() // 对象合并
+Sea.browser() // 浏览器信息
 ```
 
 联系作者
