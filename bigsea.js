@@ -402,22 +402,22 @@
   // https://juejin.im/entry/5ca45ad7e51d452c02246d26
   // 静态方法
   Sea.static = {
-    openUrl(url) {
+    openUrl(url, http = 'https') {
       // 默认 https
       if (url.startsWith('http')) {
         // 不处理 https http
       } else if (url.startsWith('//')) {
-        url = 'http:' + url
+        url = `http:${url}`
       } else if (url.startsWith('/')) {
         // 不处理
       } else {
-        url = 'https://' + url
+        url = `${http}://${url}`
       }
       return url
     },
     // 打开新网页
     open(url, replace) {
-      let s = this.openUrl(url)
+      const s = this.openUrl(url)
       if (replace) {
         window.location.href = s
       } else {
@@ -716,7 +716,7 @@
       return undefined
     },
     // 数组去重
-    set(arr, path) {
+    arraySet(arr, path) {
       const result = []
       const dict = {}
       for (const item of arr) {

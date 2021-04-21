@@ -1,10 +1,12 @@
 发布：
 
 ```
-1 恢复默认源
+1 更新版本号
+package.json -> version -> x.x.x
+2 恢复默认源
 npm config set registry https://registry.npmjs.org
-2 登录账户
+3 登录账户
 npm login
-3 发布
+4 发布
 npm publish
 ```
