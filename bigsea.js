@@ -14,7 +14,7 @@
 })(function () {
   class SEA {
     constructor(select) {
-      if (typeof select == 'string') {
+      if (typeof select === 'string') {
         this.arr = Array.from(document.querySelectorAll(select))
       } else if (select && select.addEventListener) {
         this.arr = [select]
@@ -23,20 +23,22 @@
       }
       this.dom = this.arr[0] || null
     }
+
     // 观察者
     ob(options, callback) {
       // www.cnblogs.com/jscode/p/3600060.html
-      let _callback = (e) => {
+      const _callback = (e) => {
         callback.bind(this.dom)(e[0])
       }
-      let listen = new MutationObserver(_callback)
-      for (let dom of this.arr) {
+      const listen = new MutationObserver(_callback)
+      for (const dom of this.arr) {
         listen.observe(dom, options)
       }
     }
+
     // 事件 (绑定/委托)
     on(names, select, callback, one) {
-      let off = function (e, arr) {
+      const off = function (e, arr) {
         if (Array.isArray(e.sea_event)) {
           e.sea_event.push(arr)
         } else {
@@ -44,13 +46,13 @@
         }
       }
       // 多个事件
-      for (let name of names.split(' ')) {
+      for (const name of names.split(' ')) {
         // 参数转换
         if (callback === undefined) {
           callback = select
           // 绑定
-          for (let e of this.arr) {
-            let _callback = function (event) {
+          for (const e of this.arr) {
+            const _callback = function (event) {
               callback.call(e, event)
               if (one === true) {
                 e.removeEventListener(name, _callback)
@@ -61,9 +63,9 @@
           }
         } else {
           // 委托
-          for (let e of this.arr) {
-            let _callback = function (event) {
-              let parent = Sea(event.target).parent(select).dom
+          for (const e of this.arr) {
+            const _callback = function (event) {
+              const parent = Sea(event.target).parent(select).dom
               this.querySelectorAll(select).forEach(function (dom, index) {
                 if (dom.isSameNode(parent)) {
                   // callback.bind(dom)(event, index)
@@ -84,16 +86,18 @@
         }
       }
     }
+
     // 一次性事件 (绑定/委托)
     one(name, select, callback) {
       this.on(name, select, callback, true)
     }
+
     // 移除事件
     off() {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         if (Array.isArray(e.sea_event)) {
-          for (let arr of e.sea_event) {
-            let [name, select, callback] = arr
+          for (const arr of e.sea_event) {
+            const [name, select, callback] = arr
             e.removeEventListener(name, callback)
           }
           e.sea_event = undefined
@@ -101,24 +105,26 @@
       }
       return this
     }
+
     // 触发自定义事件
     emit(name, obj, bubble) {
-      let e = new Event(name, {
+      const e = new Event(name, {
         // 事件冒泡
         bubbles: bubble || true,
       })
       e.data = obj || {}
-      for (let dom of this.arr) {
+      for (const dom of this.arr) {
         dom.dispatchEvent(e)
       }
     }
+
     // 样式
     css(obj, val) {
       // Sea('body').css('color') // 获取
       // Sea('body').css('color', 'red') // 设置单个
       // Sea('body').css({ color: 'red' }) // 设置多个
-      let set = (k, v) => {
-        for (let e of this.arr) {
+      const set = (k, v) => {
+        for (const e of this.arr) {
           e.style[k] = String(v)
         }
       }
@@ -129,23 +135,25 @@
           set(obj, val)
         }
       } else {
-        for (let key in obj) {
+        for (const key in obj) {
           set(key, obj[key])
         }
       }
       return this
     }
+
     // 显示
     show(str) {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         e.style.display = str || e.sea_display || 'flex'
       }
       return this
     }
+
     // 隐藏
     hide() {
-      for (let e of this.arr) {
-        let display = window.getComputedStyle(e).display
+      for (const e of this.arr) {
+        const display = window.getComputedStyle(e).display
         if (display !== 'none') {
           e.sea_display = display
         }
@@ -153,12 +161,13 @@
       }
       return this
     }
+
     // 查找子元素
     find(select) {
-      let sea = Sea()
-      let arr = []
+      const sea = Sea()
+      const arr = []
       if (this.dom) {
-        for (let e of this.arr) {
+        for (const e of this.arr) {
           Array.from(e.querySelectorAll(select)).forEach((e) => {
             arr.push(e)
           })
@@ -168,10 +177,11 @@
       }
       return sea
     }
+
     // 查找父元素
     parent(select) {
-      let sea = Sea()
-      let arr = []
+      const sea = Sea()
+      const arr = []
       if (this.dom) {
         if (select) {
           arr.push(this.dom.closest(select))
@@ -183,108 +193,116 @@
       }
       return sea
     }
+
     // 查找上一个元素
     prev() {
       if (this.dom) {
         return Sea(this.dom.previousSibling)
       }
     }
+
     // 查找下一个元素
     next() {
       if (this.dom) {
         return Sea(this.dom.nextSibling)
       }
     }
+
     // 子元素
     child() {
-      let sea = Sea()
-      let arr = []
-      for (let e of this.dom.childNodes) {
+      const sea = Sea()
+      const arr = []
+      for (const e of this.dom.childNodes) {
         arr.push(e)
       }
       sea.arr = arr
       sea.dom = arr[0]
       return sea
     }
+
     // 选择
     eq(i) {
-      let sea = Sea()
+      const sea = Sea()
       if (typeof i === 'number') {
-        let end = i + 1 === 0 ? undefined : i + 1
-        let arr = this.arr.slice(i, end)
+        const end = i + 1 === 0 ? undefined : i + 1
+        const arr = this.arr.slice(i, end)
         sea.arr = arr
         sea.dom = arr[0]
       }
       return sea
     }
+
     // 循环
     each(callback) {
       // 在 callback 中 return = null 相当于 break
       for (let i = 0; i < this.arr.length; i++) {
-        let e = new SEA(this.arr[i])
+        const e = new SEA(this.arr[i])
         // callback.bind(this.dom)(e, i)
         if (callback.call(this.arr[i], e, i) === null) {
           break
         }
       }
     }
+
     // 添加类
     addClass(str) {
-      for (let e of this.arr) {
-        for (let cls of str.split(' ')) {
+      for (const e of this.arr) {
+        for (const cls of str.split(' ')) {
           e.classList.add(cls)
         }
       }
       return this
     }
+
     // 删除类
     removeClass(str) {
-      for (let e of this.arr) {
-        for (let cls of str.split(' ')) {
+      for (const e of this.arr) {
+        for (const cls of str.split(' ')) {
           e.classList.remove(cls)
         }
       }
       return this
     }
+
     // 判断包含类
     hasClass(str) {
       return this.dom.classList.contains(str)
     }
+
     // 开关类
     toggleClass(str) {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         return e.classList.toggle(str)
       }
     }
+
     // 获取或设置 文本
     text(text) {
       if (text !== undefined) {
-        for (let e of this.arr) {
+        for (const e of this.arr) {
           e.innerText = String(text)
         }
-      } else {
-        if (this.dom) {
-          return this.dom.innerText
-        }
+      } else if (this.dom) {
+        return this.dom.innerText
       }
     }
+
     // 获取或设置 HTML
     html(html) {
-      if (typeof html == 'string') {
-        for (let e of this.arr) {
+      if (typeof html === 'string') {
+        for (const e of this.arr) {
           e.innerHTML = html
         }
-      } else {
-        if (this.dom) {
-          return this.dom.innerHTML
-        }
+      } else if (this.dom) {
+        return this.dom.innerHTML
       }
     }
+
     // value
     val(str) {
       if (this.dom) {
         if (str !== undefined) {
-          for (let e of this.arr) {
+          for (const e of this.arr) {
             e.value = str
           }
           return this
@@ -295,11 +313,12 @@
         return ''
       }
     }
+
     // dataset
     data(key, val) {
       if (this.dom) {
         if (val !== undefined) {
-          for (let e of this.arr) {
+          for (const e of this.arr) {
             e.dataset[key] = val
           }
         } else {
@@ -307,43 +326,50 @@
         }
       }
     }
+
     // 元素内添加
     append(html, where) {
-      let s = where || 'beforeend'
-      for (let e of this.arr) {
+      const s = where || 'beforeend'
+      for (const e of this.arr) {
         e.insertAdjacentHTML(s, html)
       }
       return this
     }
+
     appendChild(dom) {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         e.appendChild(dom)
       }
       return this
     }
+
     // 首部 添加
     prepend(html) {
       return this.append(html, 'afterbegin')
     }
+
     // 之前 添加 现有元素外
     before(html) {
       return this.append(html, 'beforebegin')
     }
+
     // 元素外添加
     after(html) {
       return this.append(html, 'afterend')
     }
+
     // 删除
     remove() {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         e.remove()
       }
     }
+
     // 获取或设置属性
     attr(key, val) {
       if (this.dom) {
         if (typeof val === 'string') {
-          for (let e of this.arr) {
+          for (const e of this.arr) {
             e.setAttribute(key, val)
           }
         } else {
@@ -351,13 +377,15 @@
         }
       }
     }
+
     // 删除属性
     removeAttr(key) {
-      for (let e of this.arr) {
+      for (const e of this.arr) {
         e.removeAttribute(key)
       }
       return this
     }
+
     // 开关属性
     toggleAttr(key, val) {
       if (this.dom) {
@@ -368,11 +396,13 @@
         }
       }
     }
+
     // 点击
     click() {
       this.dom.click()
       return this
     }
+
     // 获得焦点
     focus() {
       if (this.dom) {
@@ -380,6 +410,7 @@
       }
       return this
     }
+
     // 失去焦点
     blur() {
       if (this.dom) {
@@ -387,6 +418,7 @@
       }
       return this
     }
+
     // 全选
     select() {
       if (this.dom) {
@@ -402,16 +434,16 @@
   // https://juejin.im/entry/5ca45ad7e51d452c02246d26
   // 静态方法
   Sea.static = {
-    openUrl(url, http = 'https') {
+    openUrl(url) {
       // 默认 https
       if (url.startsWith('http')) {
         // 不处理 https http
       } else if (url.startsWith('//')) {
-        url = `http:${url}`
+        url = 'http:' + url
       } else if (url.startsWith('/')) {
         // 不处理
       } else {
-        url = `${http}://${url}`
+        url = 'https://' + url
       }
       return url
     },
@@ -419,7 +451,7 @@
     open(url, replace) {
       const s = this.openUrl(url)
       if (replace) {
-        window.location.href = s
+        window.location = s
       } else {
         window.open(s)
       }
@@ -442,12 +474,10 @@
           delete this.cut.count
           throw `断点：${n}次`
         }
+      } else if (n > 1) {
+        this.cut.count = n
       } else {
-        if (n > 1) {
-          this.cut.count = n
-        } else {
-          throw `断点`
-        }
+        throw `断点`
       }
     },
     // 返回 a-b 的随机数
@@ -472,7 +502,7 @@
     },
     // url 解析
     url(url) {
-      let obj = {}
+      const obj = {}
       let arr = []
       // url
       obj.url = url
@@ -535,7 +565,6 @@
         query: request.query || {},
         header: request.header || {},
         callback: request.callback,
-        cors: request.cors || '',
         hash: request.hash || '',
         timeout: request.timeout,
       }
@@ -550,7 +579,7 @@
       }
       // url 解析
       const url = this.url(req.url)
-      req.url = url.path
+      req.url = url.origin + url.path
       // query 请求
       let query = Object.assign(url.query, req.query)
       if (req.method === 'GET') {
@@ -562,15 +591,8 @@
       if (hash) {
         req.url += '#' + hash
       }
-      // cors 跨域
-      if (req.cors) {
-        req.header.cors = url.origin
-        req.url = req.cors + req.url
-      } else {
-        req.url = url.origin + req.url
-      }
       // promise
-      return new Promise((success, fail) => {
+      return new Promise((resolve, reject) => {
         const r = new XMLHttpRequest()
         // 跨域请求 cookie
         if (this.Ajax.withCredentials) {
@@ -595,11 +617,12 @@
               req.callback(res)
             }
             // Promise 成功
-            success(res)
+            resolve(res)
           }
         }
         r.onerror = (err) => {
-          fail(err)
+          // Promise 失败
+          reject(err)
         }
         if (req.method === 'GET') {
           r.send()
@@ -607,10 +630,9 @@
           // POST
           if (typeof req.data === 'string') {
             r.send(req.data)
-          } else {
-            // 默认 json
-            r.send(JSON.stringify(req.data))
           }
+          // 默认 json
+          r.send(JSON.stringify(req.data))
         }
       })
     },
@@ -646,8 +668,8 @@
         obj = css
       }
       let s = ''
-      for (let key in obj) {
-        let val = obj[key]
+      for (const key in obj) {
+        const val = obj[key]
         s += `${key}:${val};`
       }
       if (typeof css === 'string') {
@@ -658,7 +680,7 @@
     // 生成 query
     query(obj) {
       if (typeof obj === 'string') {
-        let result = {}
+        const result = {}
         let start = obj.indexOf('?')
         let end = obj.indexOf('#')
         if (start === -1) {
@@ -671,16 +693,16 @@
         }
         obj = obj.slice(start, end)
         if (obj) {
-          for (let e of obj.split('&')) {
-            let arr = e.split('=')
+          for (const e of obj.split('&')) {
+            const arr = e.split('=')
             result[arr[0]] = decodeURIComponent(arr[1]) || ''
           }
         }
         return result
       } else {
-        let arr = []
-        for (let key in obj) {
-          let val = obj[key]
+        const arr = []
+        for (const key in obj) {
+          const val = obj[key]
           arr.push([key, val].join('='))
         }
         let s = ''
@@ -716,7 +738,7 @@
       return undefined
     },
     // 数组去重
-    arraySet(arr, path) {
+    set(arr, path) {
       const result = []
       const dict = {}
       for (const item of arr) {
@@ -729,11 +751,9 @@
             dict[key] = true
             result.push(item)
           }
-        } else {
-          if (dict[item] !== true) {
-            dict[item] = true
-            result.push(item)
-          }
+        } else if (dict[item] !== true) {
+          dict[item] = true
+          result.push(item)
         }
       }
       return result
@@ -742,12 +762,10 @@
     localStorage(key, val) {
       if (val === undefined) {
         return this.json(window.localStorage.getItem(key))
+      } else if (val === '') {
+        window.localStorage.removeItem(key)
       } else {
-        if (val === '') {
-          window.localStorage.removeItem(key)
-        } else {
-          window.localStorage.setItem(key, JSON.stringify(val))
-        }
+        window.localStorage.setItem(key, JSON.stringify(val))
       }
     },
     // 深拷贝
@@ -755,7 +773,7 @@
       return this.json(JSON.stringify(data))
     },
   }
-  // 引入方法
+  // 引入方法 node 环境
   if (typeof require === 'function') {
     // 合并
     Sea.static.merge = require('lodash.merge')
@@ -767,30 +785,30 @@
     }
   }
   // 载入
-  for (let key in Sea.static) {
+  for (const key in Sea.static) {
     Sea[key] = Sea.static[key]
   }
   // 默认 host 域名
   // Sea.Ajax.HOST = 'https://api.sea.team'
   // 默认参数
-  Sea.Ajax.default = function () {
-    const data = {}
-    const token = Sea.localStorage('token')
-    if (token) {
-      data.token = token
-    }
-    return data
-  }
+  // Sea.Ajax.default = function () {
+  //   const data = {}
+  //   const token = Sea.localStorage('token')
+  //   if (token) {
+  //     data.token = token
+  //   }
+  //   return data
+  // }
   // 返回值 统一处理
-  Sea.Ajax.initRes = function (res) {
-    if (res) {
-      return res
-    } else {
-      return {
-        ok: false,
-        msg: '请求失败',
-      }
-    }
-  }
+  // Sea.Ajax.initRes = function (res) {
+  //   if (res) {
+  //     return res
+  //   } else {
+  //     return {
+  //       ok: false,
+  //       msg: '请求失败',
+  //     }
+  //   }
+  // }
   return Sea
 })

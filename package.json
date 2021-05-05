@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -15,8 +15,8 @@
     "sea.team",
     "bigsea.js"
   ],
-  "author": "sea.team",
-  "license": "sea.team",
+  "author": "SeaTeam",
+  "license": "SeaTeam",
   "bugs": {
     "url": "https://github.com/SeaTeam/bigsea.js/issues"
   },
