@@ -102,30 +102,28 @@ Sea.get() // Object 获取
 Sea.arraySet() // 数组去重
 Sea.localStorage() // 本地存储
 Sea.deepCopy() // 深拷贝
-Sea.merge() // 对象合并
-Sea.browser() // 浏览器信息
 ```
 
 ```js
 Sea.static = {
-  initUrl(url, http = 'https') {
+  openUrl(url) {
     // 默认 https
     if (url.startsWith('http')) {
       // 不处理 https http
     } else if (url.startsWith('//')) {
-      url = `http:${url}`
+      url = 'http:' + url
     } else if (url.startsWith('/')) {
       // 不处理
     } else {
-      url = `${http}://${url}`
+      url = 'https://' + url
     }
     return url
   },
   // 打开新网页
   open(url, replace) {
-    const s = this.initUrl(url)
+    const s = this.openUrl(url)
     if (replace) {
-      window.location.href = s
+      window.location = s
     } else {
       window.open(s)
     }
@@ -199,11 +197,11 @@ Sea.static = {
     obj.query = this.query(arr[1])
     url = arr[0]
     // path
-    obj.path = `/${url}`
+    obj.path = '/' + url
     // origin
     obj.origin = obj.host
     if (obj.protocol && obj.host) {
-      obj.origin = `${obj.protocol}://${obj.host}`
+      obj.origin = obj.protocol + '://' + obj.host
     }
     // href
     obj.href = obj.origin + obj.path
@@ -213,24 +211,7 @@ Sea.static = {
   Ajax(request) {
     // 直接 GET 请求
     if (typeof request === 'string') {
-      return new Promise((success, fail) => {
-        const r = new XMLHttpRequest()
-        r.open('GET', request, true)
-        r.onreadystatechange = () => {
-          // Promise 成功
-          if (r.readyState === 4) {
-            let res = this.json(r.response)
-            if (typeof this.Ajax.initRes === 'function') {
-              res = this.Ajax.initRes(res)
-            }
-            success(res)
-          }
-        }
-        r.onerror = function (err) {
-          fail(err)
-        }
-        r.send()
-      })
+      request = { url: request }
     }
     const req = {
       method: (request.method || 'GET').toUpperCase(),
@@ -239,13 +220,12 @@ Sea.static = {
       query: request.query || {},
       header: request.header || {},
       callback: request.callback,
-      cors: request.cors || '',
       hash: request.hash || '',
       timeout: request.timeout,
     }
     // 默认参数
     if (typeof this.Ajax.default === 'function') {
-      req.data = Object.assign(this.Ajax.default(), req.data)
+      req.data = Object.assign(this.Ajax.default() || {}, req.data)
     }
     // host
     if (!req.url.startsWith('http')) {
@@ -254,27 +234,23 @@ Sea.static = {
     }
     // url 解析
     const url = this.url(req.url)
-    req.url = url.path
+    req.url = url.origin + url.path
     // query 请求
     let query = Object.assign(url.query, req.query)
     if (req.method === 'GET') {
       query = Object.assign(query, req.data)
     }
-    req.url += `?${this.query(query)}`
+    const search = this.query(query)
+    if (search) {
+      req.url += '?' + search
+    }
     // hash 锚点
     const hash = req.hash || url.hash
     if (hash) {
-      req.url += `#${hash}`
-    }
-    // cors 跨域
-    if (req.cors) {
-      req.header.cors = url.origin
-      req.url = req.cors + req.url
-    } else {
-      req.url = url.origin + req.url
+      req.url += '#' + hash
     }
     // promise
-    return new Promise((success, fail) => {
+    return new Promise((resolve, reject) => {
       const r = new XMLHttpRequest()
       // 跨域请求 cookie
       if (this.Ajax.withCredentials) {
@@ -285,25 +261,32 @@ Sea.static = {
         r.timeout = req.timeout
       }
       r.open(req.method, req.url, true)
+      // default json
+      if (req.method !== 'GET' && !req.header['Content-Type']) {
+        req.header['Content-Type'] = 'application/json'
+      }
       for (const key in req.header) {
         r.setRequestHeader(key, req.header[key])
       }
       r.onreadystatechange = () => {
         if (r.readyState === 4) {
           let res = this.json(r.response)
-          if (typeof this.Ajax.initRes === 'function') {
-            res = this.Ajax.initRes(res)
+          if (r.status !== 200) {
+            if (typeof this.Ajax.fail === 'function') {
+              this.Ajax.fail(r)
+            }
           }
           // 回调函数
           if (typeof req.callback === 'function') {
             req.callback(res)
           }
           // Promise 成功
-          success(res)
+          resolve(res)
         }
       }
       r.onerror = (err) => {
-        fail(err)
+        // Promise 失败
+        reject(err)
       }
       if (req.method === 'GET') {
         r.send()
@@ -311,18 +294,16 @@ Sea.static = {
         // POST
         if (typeof req.data === 'string') {
           r.send(req.data)
-        } else {
-          // 默认 json
-          r.send(JSON.stringify(req.data))
         }
+        // default json
+        r.send(JSON.stringify(req.data))
       }
     })
   },
   // 文档 https://developer.qiniu.com/kodo/sdk/1283/javascript
   upload(qiniu, file, token, callback) {
     // 关于 key 要怎么处理自行解决，但如果为 undefined 或者 null 会使用上传后的 hash 作为 key.
-    const { key } = file
-    // 因人而异，自行解决
+    const key = file.key
     const putExtra = {}
     const config = {}
     const observable = qiniu.upload(file, key, token, putExtra, config)
@@ -381,17 +362,18 @@ Sea.static = {
         }
       }
       return result
+    } else {
+      const arr = []
+      for (const key in obj) {
+        const val = obj[key]
+        arr.push([key, val].join('='))
+      }
+      let s = ''
+      if (arr.length) {
+        s = arr.join('&')
+      }
+      return s
     }
-    const arr = []
-    for (const key in obj) {
-      const val = obj[key]
-      arr.push([key, val].join('='))
-    }
-    let s = ''
-    if (arr.length) {
-      s = arr.join('&')
-    }
-    return s
   },
   // 检查 Object
   has(obj, path) {
@@ -419,7 +401,7 @@ Sea.static = {
     return undefined
   },
   // 数组去重
-  arraySet(arr, path) {
+  set(arr, path) {
     const result = []
     const dict = {}
     for (const item of arr) {
@@ -443,8 +425,7 @@ Sea.static = {
   localStorage(key, val) {
     if (val === undefined) {
       return this.json(window.localStorage.getItem(key))
-    }
-    if (val === '') {
+    } else if (val === '') {
       window.localStorage.removeItem(key)
     } else {
       window.localStorage.setItem(key, JSON.stringify(val))
@@ -454,17 +435,6 @@ Sea.static = {
   deepCopy(data) {
     return this.json(JSON.stringify(data))
   },
-}
-// 引入方法
-if (typeof require === 'function') {
-  // 合并
-  Sea.static.merge = require('lodash.merge')
-  // 浏览器
-  if (typeof window !== 'undefined') {
-    const Bowser = require('bowser')
-    // 浏览器
-    Sea.static.browser = Bowser.getParser(window.navigator.userAgent).parsedResult
-  }
 }
 ```
 

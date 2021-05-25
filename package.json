@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "2.1.2",
+  "version": "2.2.2",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {
@@ -20,9 +20,5 @@
   "bugs": {
     "url": "https://github.com/SeaTeam/bigsea.js/issues"
   },
-  "homepage": "https://github.com/SeaTeam/bigsea.js#readme",
-  "dependencies": {
-    "bowser": "^2.11.0",
-    "lodash.merge": "^4.6.2"
-  }
+  "homepage": "https://github.com/SeaTeam/bigsea.js#readme"
 }

@@ -539,24 +539,7 @@
     Ajax(request) {
       // 直接 GET 请求
       if (typeof request === 'string') {
-        return new Promise((success, fail) => {
-          const r = new XMLHttpRequest()
-          r.open('GET', request, true)
-          r.onreadystatechange = () => {
-            // Promise 成功
-            if (r.readyState === 4) {
-              let res = this.json(r.response)
-              if (typeof this.Ajax.initRes === 'function') {
-                res = this.Ajax.initRes(res)
-              }
-              success(res)
-            }
-          }
-          r.onerror = function (err) {
-            fail(err)
-          }
-          r.send()
-        })
+        request = { url: request }
       }
       const req = {
         method: (request.method || 'GET').toUpperCase(),
@@ -570,7 +553,7 @@
       }
       // 默认参数
       if (typeof this.Ajax.default === 'function') {
-        req.data = Object.assign(this.Ajax.default(), req.data)
+        req.data = Object.assign(this.Ajax.default() || {}, req.data)
       }
       // host
       if (!req.url.startsWith('http')) {
@@ -585,7 +568,10 @@
       if (req.method === 'GET') {
         query = Object.assign(query, req.data)
       }
-      req.url += '?' + this.query(query)
+      const search = this.query(query)
+      if (search) {
+        req.url += '?' + search
+      }
       // hash 锚点
       const hash = req.hash || url.hash
       if (hash) {
@@ -603,14 +589,20 @@
           r.timeout = req.timeout
         }
         r.open(req.method, req.url, true)
+        // default json
+        if (req.method !== 'GET' && !req.header['Content-Type']) {
+          req.header['Content-Type'] = 'application/json'
+        }
         for (const key in req.header) {
           r.setRequestHeader(key, req.header[key])
         }
         r.onreadystatechange = () => {
           if (r.readyState === 4) {
             let res = this.json(r.response)
-            if (typeof this.Ajax.initRes === 'function') {
-              res = this.Ajax.initRes(res)
+            if (r.status !== 200) {
+              if (typeof this.Ajax.fail === 'function') {
+                this.Ajax.fail(r)
+              }
             }
             // 回调函数
             if (typeof req.callback === 'function') {
@@ -631,7 +623,7 @@
           if (typeof req.data === 'string') {
             r.send(req.data)
           }
-          // 默认 json
+          // default json
           r.send(JSON.stringify(req.data))
         }
       })
@@ -640,7 +632,6 @@
     upload(qiniu, file, token, callback) {
       // 关于 key 要怎么处理自行解决，但如果为 undefined 或者 null 会使用上传后的 hash 作为 key.
       const key = file.key
-      // 因人而异，自行解决
       const putExtra = {}
       const config = {}
       const observable = qiniu.upload(file, key, token, putExtra, config)
@@ -773,17 +764,6 @@
       return this.json(JSON.stringify(data))
     },
   }
-  // 引入方法 node 环境
-  if (typeof require === 'function') {
-    // 合并
-    Sea.static.merge = require('lodash.merge')
-    // 浏览器
-    if (typeof window !== 'undefined') {
-      const Bowser = require('bowser')
-      // 浏览器
-      Sea.static.browser = Bowser.getParser(window.navigator.userAgent).parsedResult
-    }
-  }
   // 载入
   for (const key in Sea.static) {
     Sea[key] = Sea.static[key]
@@ -791,24 +771,8 @@
   // 默认 host 域名
   // Sea.Ajax.HOST = 'https://api.sea.team'
   // 默认参数
-  // Sea.Ajax.default = function () {
-  //   const data = {}
-  //   const token = Sea.localStorage('token')
-  //   if (token) {
-  //     data.token = token
-  //   }
-  //   return data
-  // }
+  // Sea.Ajax.default = () => {}
   // 返回值 统一处理
-  // Sea.Ajax.initRes = function (res) {
-  //   if (res) {
-  //     return res
-  //   } else {
-  //     return {
-  //       ok: false,
-  //       msg: '请求失败',
-  //     }
-  //   }
-  // }
+  // Sea.Ajax.fail = (res) => {}
   return Sea
 })

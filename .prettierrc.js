@@ -1,6 +1,4 @@
 module.exports = {
-  // 一行的字符数 如果超过会进行换行，默认为 80
-  printWidth: 100,
   // 一个tab代表几个空格数 默认为 2
   tabWidth: 2,
   // 是否使用tab进行缩进 默认为 false，表示用空格进行缩减
