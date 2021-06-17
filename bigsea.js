@@ -97,7 +97,8 @@
       for (const e of this.arr) {
         if (Array.isArray(e.sea_event)) {
           for (const arr of e.sea_event) {
-            const [name, select, callback] = arr
+            const name = arr[0]
+            const callback = arr[2]
             e.removeEventListener(name, callback)
           }
           e.sea_event = undefined
@@ -272,7 +273,7 @@
     // 开关类
     toggleClass(str) {
       for (const e of this.arr) {
-        return e.classList.toggle(str)
+        e.classList.toggle(str)
       }
     }
 
@@ -486,7 +487,10 @@
     },
     // 正则 特殊字符转义
     re(s, flag) {
-      return new RegExp(s.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$&'), flag || 'g')
+      return new RegExp(
+        s.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$&'),
+        flag || 'g',
+      )
     },
     // json 解析
     json(s) {
@@ -502,6 +506,13 @@
     },
     // url 解析
     url(url) {
+      if (typeof url === 'object') {
+        let query = this.query(url.query)
+        let hash = url.hash
+        query = query ? `?${query}` : ''
+        hash = hash ? `#${hash}` : ''
+        return `${url.href}${query}${hash}`
+      }
       const obj = {}
       let arr = []
       // url
@@ -511,6 +522,9 @@
       obj.protocol = arr[1] ? arr[0] : ''
       url = arr[1] || arr[0]
       // host
+      if (url.includes('/?') === false) {
+        url = url.replace('?', '/?')
+      }
       arr = url.split('/')
       obj.host = arr[0]
       url = arr.slice(1).join('/')
@@ -522,9 +536,12 @@
       url = arr[0]
       // query
       arr = url.split('?')
-      obj.query = this.query(arr[1])
+      obj.query = this.query(arr[1]) || {}
       url = arr[0]
       // path
+      if (obj.url.includes('/?') === false) {
+        url = url.slice(0, -1)
+      }
       obj.path = '/' + url
       // origin
       obj.origin = obj.host
@@ -532,7 +549,8 @@
         obj.origin = obj.protocol + '://' + obj.host
       }
       // href
-      obj.href = obj.origin + obj.path
+      const path = obj.path === '/' ? '' : obj.path
+      obj.href = `${obj.origin}${path}`
       return obj
     },
     // Ajax
@@ -545,6 +563,7 @@
         method: (request.method || 'GET').toUpperCase(),
         url: request.url || '',
         data: request.data || {},
+        dataType: request.dataType || 'json',
         query: request.query || {},
         header: request.header || {},
         callback: request.callback,
@@ -598,8 +617,8 @@
         }
         r.onreadystatechange = () => {
           if (r.readyState === 4) {
-            let res = this.json(r.response)
-            if (r.status !== 200) {
+            const res = this.json(r.response)
+            if (r.status < 200 || r.status >= 300) {
               if (typeof this.Ajax.fail === 'function') {
                 this.Ajax.fail(r)
               }
