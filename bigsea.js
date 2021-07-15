@@ -467,20 +467,6 @@
         log('测试失败:', message)
       }
     },
-    // 循环 n 次后断点
-    cut(n) {
-      if (this.cut.count) {
-        this.cut.count--
-        if (this.cut.count === 1) {
-          delete this.cut.count
-          throw `断点：${n}次`
-        }
-      } else if (n > 1) {
-        this.cut.count = n
-      } else {
-        throw `断点`
-      }
-    },
     // 返回 a-b 的随机数
     random(a, b) {
       return parseInt(Math.random() * (b - a) + a)
@@ -506,12 +492,27 @@
     },
     // url 解析
     url(url) {
+      /*
+      ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+      │                                               href                                              │
+      ├──────────┬───┬─────────────────────┬────────────────────────┬───────────────────────────┬───────┤
+      │ protocol │   │        auth         │          host          │                           │ hash  │
+      │          │   │                     ├─────────────────┬──────┼──────────┬────────────────┤       │
+      │          │   │                     │    hostname     │ port │   path   │     search     │       │
+      │          │   │                     │                 │      │          ├─┬──────────────┤       │
+      │          │   │                     │                 │      │          │ │    query     │       │
+      "  https    ://    user   :   pass   @ sub.example.com : 8080   /p/a/t/h  ?  query=string # hash "
+      │          │   │          │          │    hostname     │ port │          │                │       │
+      │          │   │          │          ├─────────────────┴──────┤          │                │       │
+      │ protocol │   │ username │ password │          host          │          │                │       │
+      ├──────────┴───┼──────────┴──────────┼────────────────────────┤          │                │       │
+      │    origin    │                     │         origin         │   path   │     search     │ hash  │
+      ├──────────────┴─────────────────────┴────────────────────────┴──────────┴────────────────┴───────┤
+      │                                               href                                              │
+      └─────────────────────────────────────────────────────────────────────────────────────────────────┘
+      */
       if (typeof url === 'object') {
-        let query = this.query(url.query)
-        let hash = url.hash
-        query = query ? `?${query}` : ''
-        hash = hash ? `#${hash}` : ''
-        return `${url.href}${query}${hash}`
+        return this.urlFormat(url)
       }
       const obj = {}
       let arr = []
@@ -522,14 +523,14 @@
       obj.protocol = arr[1] ? arr[0] : ''
       url = arr[1] || arr[0]
       // host
-      if (url.includes('/?') === false) {
-        url = url.replace('?', '/?')
-      }
       arr = url.split('/')
       obj.host = arr[0]
       url = arr.slice(1).join('/')
       // port
       obj.port = obj.host.split(':')[1] || 80
+      if (obj.protocol === 'https') {
+        obj.port = 443
+      }
       // hash
       arr = url.split('#')
       obj.hash = arr[1] || ''
@@ -539,9 +540,6 @@
       obj.query = this.query(arr[1]) || {}
       url = arr[0]
       // path
-      if (obj.url.includes('/?') === false) {
-        url = url.slice(0, -1)
-      }
       obj.path = '/' + url
       // origin
       obj.origin = obj.host
@@ -552,6 +550,19 @@
       const path = obj.path === '/' ? '' : obj.path
       obj.href = `${obj.origin}${path}`
       return obj
+    },
+    // url 生成
+    urlFormat(obj) {
+      // used: origin path query hash
+      const origin = obj.origin || ''
+      const path = obj.path || ''
+      let query = obj.query || {}
+      let hash = obj.hash || ''
+      query = this.query(query)
+      query = query ? `?${query}` : ''
+      hash = hash ? `#${hash}` : ''
+      const href = `${origin}${path}`
+      return `${href}${query}${hash}`
     },
     // Ajax
     Ajax(request) {
@@ -722,6 +733,18 @@
         return s
       }
     },
+    // url params set get delete
+    params(key, value) {
+      const obj = new window.URL(window.location.href)
+      if (value) {
+        obj.searchParams.set(key, value)
+      } else if (value === '') {
+        obj.searchParams.delete(key, value)
+      } else {
+        return obj.searchParams.get(key)
+      }
+      history.pushState({}, 0, obj.href)
+    },
     // 检查 Object
     has(obj, path) {
       if (this.get(obj, path) === null) {
@@ -787,6 +810,7 @@
   for (const key in Sea.static) {
     Sea[key] = Sea.static[key]
   }
+  delete Sea.static
   // 默认 host 域名
   // Sea.Ajax.HOST = 'https://api.sea.team'
   // 默认参数

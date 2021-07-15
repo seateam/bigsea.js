@@ -1,11 +1,9 @@
 {
   "name": "bigsea",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "bigsea.js",
   "main": "bigsea.js",
-  "scripts": {
-    "npm-install": "npm install"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeaTeam/bigsea.js.git"
