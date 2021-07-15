@@ -743,7 +743,7 @@
       } else {
         return obj.searchParams.get(key)
       }
-      history.pushState({}, 0, obj.href)
+      history.replaceState({}, 0, obj.href)
     },
     // 检查 Object
     has(obj, path) {

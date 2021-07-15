@@ -1,6 +1,6 @@
 {
   "name": "bigsea",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "description": "bigsea.js",
   "main": "bigsea.js",
   "scripts": {},
@@ -9,7 +9,7 @@
     "url": "git+https://github.com/SeaTeam/bigsea.js.git"
   },
   "keywords": [
-    "bigsea",
+    "Sea",
     "sea.team",
     "bigsea.js"
   ],
