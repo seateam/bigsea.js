@@ -3,7 +3,7 @@ export = bigsea
 interface UrlObj {
   origin: string
   path: string
-  query: object
+  query: any
   hash: string
   url?: string
   host?: string
@@ -15,17 +15,17 @@ interface UrlObj {
 declare function bigsea(select: any): any
 
 declare namespace bigsea {
-  function Ajax(request: object | string): any
+  function Ajax(request: any): any
 
-  function css(css: object | string, obj: object): string
+  function css(css: any, obj: any): string
 
   function deepCopy(data: any): any
 
   function ensure(bool: boolean, message: string): void
 
-  function get(obj: object, path: string): any
+  function get(obj: any, path: string): any
 
-  function has(obj: object, path: string): boolean
+  function has(obj: any, path: string): boolean
 
   function json(s: string): any
 
@@ -37,7 +37,7 @@ declare namespace bigsea {
 
   function params(key: string, value: string): void
 
-  function query(obj: object | string): object | string
+  function query(obj: any): any
 
   function random(a: number, b: number): number
 
@@ -47,7 +47,7 @@ declare namespace bigsea {
 
   function type(obj: any): string
 
-  function url(url: string | UrlObj): string | UrlObj
+  function url(url: any): any
 
   function urlFormat(obj: UrlObj): string
 }
