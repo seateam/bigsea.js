@@ -1,3 +1,7 @@
+- 2021 年 8 月 15 日 更新
+
+> 加入 bigsea.d.ts typescript 声明文件
+
 # bigsea.js
 
 直接在浏览器 中使用
@@ -158,7 +162,10 @@ Sea.static = {
   },
   // 正则 特殊字符转义
   re(s, flag) {
-    return new RegExp(s.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$&'), flag || 'g')
+    return new RegExp(
+      s.replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$&'),
+      flag || 'g',
+    )
   },
   // json 解析
   json(s) {
