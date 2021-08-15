@@ -658,30 +658,6 @@
         }
       })
     },
-    // 文档 https://developer.qiniu.com/kodo/sdk/1283/javascript
-    upload(qiniu, file, token, callback) {
-      // 关于 key 要怎么处理自行解决，但如果为 undefined 或者 null 会使用上传后的 hash 作为 key.
-      const key = file.key
-      const putExtra = {}
-      const config = {}
-      const observable = qiniu.upload(file, key, token, putExtra, config)
-
-      const next = (event) => {
-        callback('next', event.total)
-      }
-
-      const error = (err) => {
-        callback('error', err)
-      }
-
-      const complete = (res) => {
-        callback('complete', res)
-      }
-      const uploadTask = observable.subscribe(next, error, complete)
-      return uploadTask
-      // 取消上传
-      // uploadTask.unsubscribe()
-    },
     // 生成样式 String
     css(css, obj) {
       // this.css('top:hover', {'display':'block', 'cursor':'zoom-in'})
@@ -776,7 +752,7 @@
       const dict = {}
       for (const item of arr) {
         if (typeof item === 'object') {
-          const key = this.get(item, path)
+          const key = this.get(item, path || '')
           // 没找到不去重
           if (key === null) {
             result.push(item)
