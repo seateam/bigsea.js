@@ -29,7 +29,7 @@ declare namespace bigsea {
 
   function json(s: string): any
 
-  function localStorage(key: string, val: any): any
+  function localStorage(key: string, val?: any): any
 
   function open(url: string, replace: boolean): void
 
