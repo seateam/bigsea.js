@@ -104,22 +104,67 @@ Sea.float(1 - 0.9) // 返回 0.1
 
 #### 静态方法
 
+#### 返回 a-b 的随机数
+
+```js
+// 不包括 b
+// 举例：生成 4 位随机数
+Sea.random(1000, 10000)
+```
+
+#### 正则 特殊字符转义
+
+```js
+Sea.re('.*+?^=!:${}()') // 返回 /\.\*\+\?\^\=\!\:\$\{\}\(\)/g
+```
+
+#### json 解析
+
+```js
+// 不会报错，无法解析则返回本身
+Sea.json(`{"test": 123}`)
+// 返回对象 {test: 123}
+Sea.json(`{test: 456}`)
+// 返回字符串 {test: 456}
+```
+
+#### 返回数据类型
+
+```js
+// 原生 typeof null 会返回 "object" 妥妥的BUG
+Sea.type(null) // 返回 "null"
+Sea.type('') // 返回 "string"
+Sea.type([1, 2, 3]) //返回"array"
+Sea.type(1, 2, 3) //返回"number"
+// 支持所有数据类型
+```
+
+#### url 解析 & 构建
+
+```js
+let url = Sea.url('https://sea.team/book?id=110')
+// 支持修改的参数 origin path query hash
+url.path = '/mine'
+url.query.id = '120'
+Sea.urlFormat(url)
+// 返回 https://sea.team/mine?id=120
+```
+
 ```js
 Sea.open() // 打开新网页
 Sea.float() // 浮点数运算
-Sea.ensure() // 测试
-Sea.cut() // 循环 n 次后断点
 Sea.random() // 返回 a-b 的随机数
 Sea.re() // 正则 特殊字符转义
 Sea.json() // json 解析
 Sea.type() // 返回数据类型
 Sea.url() // url 解析
+Sea.urlFormat() // url 构建
 Sea.Ajax() // Ajax
 Sea.css() // 生成样式 String
 Sea.query() // 生成 query
 Sea.has() // Object 检查
 Sea.get() // Object 获取
-Sea.arraySet() // 数组去重
+Sea.set() // 数组去重
 Sea.localStorage() // 本地存储
 Sea.deepCopy() // 深拷贝
 ```
@@ -322,30 +367,6 @@ Sea.static = {
         r.send(JSON.stringify(req.data))
       }
     })
-  },
-  // 文档 https://developer.qiniu.com/kodo/sdk/1283/javascript
-  upload(qiniu, file, token, callback) {
-    // 关于 key 要怎么处理自行解决，但如果为 undefined 或者 null 会使用上传后的 hash 作为 key.
-    const key = file.key
-    const putExtra = {}
-    const config = {}
-    const observable = qiniu.upload(file, key, token, putExtra, config)
-
-    const next = (event) => {
-      callback('next', event.total)
-    }
-
-    const error = (err) => {
-      callback('error', err)
-    }
-
-    const complete = (res) => {
-      callback('complete', res)
-    }
-    const uploadTask = observable.subscribe(next, error, complete)
-    return uploadTask
-    // 取消上传
-    // uploadTask.unsubscribe()
   },
   // 生成样式 String
   css(css, obj) {

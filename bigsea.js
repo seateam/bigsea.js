@@ -461,12 +461,6 @@
     float(n, digit = 10) {
       return parseFloat(n.toFixed(digit))
     },
-    // 测试
-    ensure(bool, message) {
-      if (!bool) {
-        log('测试失败:', message)
-      }
-    },
     // 返回 a-b 的随机数
     random(a, b) {
       return parseInt(Math.random() * (b - a) + a)
