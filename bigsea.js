@@ -658,22 +658,6 @@
         }
       })
     },
-    // 生成样式 String
-    css(css, obj) {
-      // this.css('top:hover', {'display':'block', 'cursor':'zoom-in'})
-      if (typeof css === 'object') {
-        obj = css
-      }
-      let s = ''
-      for (const key in obj) {
-        const val = obj[key]
-        s += `${key}:${val};`
-      }
-      if (typeof css === 'string') {
-        s = `${css}{${s}}`
-      }
-      return s
-    },
     // 生成 query
     query(obj) {
       if (typeof obj === 'string') {
@@ -716,8 +700,10 @@
         obj.searchParams.set(key, value)
       } else if (value === '') {
         obj.searchParams.delete(key, value)
-      } else {
+      } else if (key) {
         return obj.searchParams.get(key)
+      } else {
+        return obj.searchParams
       }
       history.replaceState({}, 0, obj.href)
     },
